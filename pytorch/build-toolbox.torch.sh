@@ -7,9 +7,11 @@ cd $(dirname $0)
 # Import variables (handles setting ROCM_ARCH to gfx906, etc)
 source ../env.sh "pytorch" "rocm"
 
-# Apply preset environments if evaluating manual scripts
-ROCM_VERSION=${TORCH_ROCM_VERSION:-"6.4.4"}
-TORCH_VERSION=${TORCH_VERSION:-"v2.7.1"}
+# Versions come from env.sh (TORCH_ROCM_VERSION / TORCH_VERSION), overridable via env vars.
+# The fallbacks must match env.sh, otherwise they are dead code.
+ROCM_VERSION=${TORCH_ROCM_VERSION:-"7.2.1"}
+TORCH_VERSION=${TORCH_VERSION:-"v2.11.0"}
+TORCH_VISION_VERSION=${TORCH_VISION_VERSION:-""}
 
 TOOLBOX_TAG="docker.io/kyuz0/pytorch-toolbox-gfx906:${TORCH_VERSION}-rocm-${ROCM_VERSION}"
 
