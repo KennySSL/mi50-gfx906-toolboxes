@@ -1,10 +1,12 @@
 #!/bin/bash
 set -e
+# pipefail: without it, `podman build | tee` hides a failed build and the script still prints "Build complete!"
+set -o pipefail
 
 cd $(dirname $0)
 
-# Default to 6.4.4 as requested, or let the user override it via environment variables (e.g. ROCM_VERSION=7.2.1 ./build-toolbox.llama.sh)
-ROCM_VERSION=${ROCM_VERSION:-"6.4.4"}
+# Default to 7.2.1: the arte-fact gfx906 fork requires ROCm 7.1+. Override via env, e.g. ROCM_VERSION=6.4.4 ./build-toolbox.llama.sh
+ROCM_VERSION=${ROCM_VERSION:-"7.2.1"}
 TOOLBOX_TAG="docker.io/kyuz0/llamacpp-toolbox-gfx906:rocm-${ROCM_VERSION}"
 
 mkdir -p logs
