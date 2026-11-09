@@ -13,10 +13,14 @@ WORKDIR /app
 # Context must be ./llama.cpp/
 COPY ./submodules/llama.cpp .
 
-# Compile Llama natively for gfx906 using the ROCm tools mapped into the host
+# Compile Llama natively for gfx906 using the ROCm tools mapped into the host.
+# GGML_HIP_GRAPHS: +8-10% decode speed on gfx906 (per arte-fact/llamacpp-gfx-906-turbo README).
+# GGML_HIP_GFX906: fork-only switch for the gfx906 Wave64 kernels; upstream ignores unknown -D options.
 RUN HIPCXX="$(hipconfig -l)/clang" HIP_PATH="$(hipconfig -R)" \
     cmake -S . -B build \
         -DGGML_HIP=ON \
+        -DGGML_HIP_GRAPHS=ON \
+        -DGGML_HIP_GFX906=ON \
         -DGGML_HIP_ROCWMMA_FATTN=ON \
         -DAMDGPU_TARGETS="$ROCM_DOCKER_ARCH" \
         -DGGML_BACKEND_DL=ON -DGGML_CPU_ALL_VARIANTS=ON \
